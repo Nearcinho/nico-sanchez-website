@@ -866,16 +866,8 @@ body {
 }
 
 .about-content {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-12);
-}
-
-@media (min-width: 1024px) {
-    .about-content {
-        grid-template-columns: 2fr 1fr;
-        gap: var(--space-16);
-    }
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .about-text p {

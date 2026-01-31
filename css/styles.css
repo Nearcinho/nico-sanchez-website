@@ -773,6 +773,15 @@ body {
     }
 }
 
+/* Logo oscuro para mejor contraste en fondo blanco */
+.brand-logo-img--dark {
+    filter: grayscale(100%) contrast(1.5) brightness(0.4);
+}
+
+.brand-logo-img--dark:hover {
+    filter: none;
+}
+
 /* Scroll indicator del nuevo hero */
 .hero-new__scroll {
     position: absolute;

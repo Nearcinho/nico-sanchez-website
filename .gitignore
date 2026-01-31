@@ -1,0 +1,15 @@
+# Archivos fuente originales (PDFs de LinkedIn y fotos originales)
+Public/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node modules (si se agregan en el futuro)
+node_modules/

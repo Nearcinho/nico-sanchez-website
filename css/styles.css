@@ -196,13 +196,13 @@ body {
 }
 
 .nav-logo__img {
-    height: 40px;
+    height: 55px;
     width: auto;
 }
 
 @media (min-width: 768px) {
     .nav-logo__img {
-        height: 50px;
+        height: 70px;
     }
 }
 
@@ -649,10 +649,10 @@ body {
   line-height: 1.3;
 
   position: absolute;
-  top: 16px;
+  top: calc(var(--nav-height) + var(--space-12));
   left: 50%;
   transform: translateX(-50%);
-  max-width: 520px;
+  max-width: 1024px;
   padding-left: 24px;
   z-index: 2;
 }

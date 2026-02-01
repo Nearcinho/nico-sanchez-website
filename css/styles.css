@@ -690,7 +690,7 @@ body {
   letter-spacing: -0.03em;
   margin-bottom: var(--space-4);
 
-  margin-top: 70px; /* ↓ baja el bloque sin mover la frase */
+  margin-top: 140px; /* ↓ baja el bloque sin mover la frase */
 }
 
 @media (min-width: 768px) {

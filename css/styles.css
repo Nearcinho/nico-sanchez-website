@@ -654,7 +654,7 @@ body {
   top: calc(var(--nav-height) + var(--space-12));
   left: 50%;
   transform: translateX(-50%);
-  max-width: 520px;
+  max-width: 1024px;
   padding-left: 24px;
   z-index: 2;
 }

@@ -618,12 +618,11 @@ body {
 .hero-new__content {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  align-items: center;          /* centra vertical */
+  justify-content: flex-start;  /* NO empuja con space-between */
   gap: var(--space-10);
   padding: var(--space-8) var(--space-6);
-  min-height: 100vh;
-  position: relative;
+  min-height: 90vh;             /* mejor que 100vh para no “estirar” */
 }
 
 @media (min-width: 768px) {
@@ -640,7 +639,9 @@ body {
 }
 
 .hero-new__text {
-    max-width: 600px;
+  max-width: 600px;
+  width: 600px;        /* fija el bloque para que no cambie */
+  position: relative;  /* padre del quote absolute */
 }
 
 /* Frase manuscrita */
@@ -652,10 +653,9 @@ body {
   line-height: 1.3;
 
   position: absolute;
-  top: calc(var(--nav-height) + var(--space-12));
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 1024px;
+  top: -48px;            /* controla qué tan arriba/abajo queda */
+  left: 0;               /* alineado al bloque de texto */
+  max-width: 520px;      /* coherente con el título */
   padding-left: 24px;
   z-index: 2;
 }
@@ -723,9 +723,7 @@ body {
 
 /* Marcas */
 .hero-new__brands {
-    margin-top: auto;
-    padding-top: var(--space-8);
-    border-top: 1px solid var(--color-gray-200);
+  margin-top: var(--space-10);
 }
 
 .hero-new__brands-label {
@@ -1660,5 +1658,23 @@ html {
     transform: none;
     margin: 24px auto;
     max-width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-new__content {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .hero-new__text {
+    width: auto;
+    max-width: 600px;
+  }
+
+  .hero-new__quote {
+    position: static;
+    margin: 24px auto;
+    transform: none;
   }
 }

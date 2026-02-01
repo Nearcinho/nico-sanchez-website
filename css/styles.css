@@ -690,7 +690,7 @@ body {
   letter-spacing: -0.03em;
   margin-bottom: var(--space-4);
 
-  margin-top: 250px; /* ↓ baja el bloque sin mover la frase */
+  margin-top: 70px; /* ↓ baja el bloque sin mover la frase */
 }
 
 @media (min-width: 768px) {
@@ -1663,4 +1663,10 @@ html {
     margin: 24px auto;
     max-width: 90%;
   }
+}
+
+.hero-new__name,
+.hero-new__role,
+.hero-new__cta {
+  transform: translateY(70px);
 }

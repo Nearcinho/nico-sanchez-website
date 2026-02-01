@@ -185,16 +185,25 @@ body {
 }
 
 .nav-logo {
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    color: var(--color-text);
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    letter-spacing: -0.02em;
-    transition: color var(--transition-fast);
+    transition: opacity var(--transition-fast);
 }
 
 .nav-logo:hover {
-    color: var(--color-primary);
+    opacity: 0.8;
+}
+
+.nav-logo__img {
+    height: 40px;
+    width: auto;
+}
+
+@media (min-width: 768px) {
+    .nav-logo__img {
+        height: 50px;
+    }
 }
 
 .nav-toggle {

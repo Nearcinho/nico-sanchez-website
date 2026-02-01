@@ -654,11 +654,12 @@ body {
   line-height: 1.3;
 
   position: absolute;
-  top: 30px;           /* ← controla qué tan abajo queda la frase */
-  left: 0;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
   max-width: 520px;
   padding-left: 24px;
-  z-index: 2;
+   z-index: 2;
 }
 
 .hero-new__quote::before {

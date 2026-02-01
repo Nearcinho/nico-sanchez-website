@@ -1668,5 +1668,5 @@ html {
 .hero-new__name,
 .hero-new__role,
 .hero-new__cta {
-  transform: translateY(70px);
+  transform: translateY(140px);
 }

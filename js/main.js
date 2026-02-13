@@ -1,362 +1,632 @@
 /**
  * ============================================================================
  * NICOLÁS SÁNCHEZ - WEBSITE INTERACTIVITY
+ * Versión Premium 2025
  * ============================================================================
  *
- * JavaScript modular y ligero para:
- * - Navegación móvil
- * - Animaciones de scroll (Intersection Observer)
- * - Navegación suave
- * - Efectos visuales sutiles
- *
- * Sin dependencias externas para máxima performance.
+ * Módulos:
+ * - Navegación: Menú móvil, scroll effects, active states
+ * - Servicios: Acordeón con carrusel sincronizado
+ * - Testimonios: Carrusel táctil con navegación
+ * - Animaciones: IntersectionObserver, scroll reveals
+ * - Accesibilidad: ARIA, keyboard navigation, reduced motion
  */
 
 (function() {
     'use strict';
 
-    // ========================================================================
-    // DOM ELEMENTS
-    // ========================================================================
-
-    const DOM = {
-        nav: document.getElementById('nav'),
-        navToggle: document.getElementById('nav-toggle'),
-        navMenu: document.getElementById('nav-menu'),
-        navLinks: document.querySelectorAll('.nav-link'),
-        fadeElements: document.querySelectorAll('.fade-in'),
-        sections: document.querySelectorAll('.section'),
-        cards: document.querySelectorAll('.expertise-card, .testimonial-card, .timeline-item, .philosophy-item')
-    };
-
-    // ========================================================================
-    // NAVIGATION
-    // ========================================================================
-
-    /**
-     * Maneja el estado del menú móvil
-     */
-    function initMobileNav() {
-        if (!DOM.navToggle || !DOM.navMenu) return;
-
-        DOM.navToggle.addEventListener('click', toggleMenu);
-
-        // Cerrar menú al hacer click en un enlace
-        DOM.navLinks.forEach(link => {
-            link.addEventListener('click', closeMenu);
-        });
-
-        // Cerrar menú al hacer click fuera
-        document.addEventListener('click', (e) => {
-            if (!DOM.navMenu.contains(e.target) && !DOM.navToggle.contains(e.target)) {
-                closeMenu();
-            }
-        });
-
-        // Cerrar menú con tecla Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeMenu();
-            }
-        });
-    }
-
-    function toggleMenu() {
-        DOM.navToggle.classList.toggle('active');
-        DOM.navMenu.classList.toggle('active');
-        document.body.style.overflow = DOM.navMenu.classList.contains('active') ? 'hidden' : '';
-    }
-
-    function closeMenu() {
-        DOM.navToggle.classList.remove('active');
-        DOM.navMenu.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    /**
-     * Añade clase al nav cuando se hace scroll
-     */
-    function initNavScroll() {
-        if (!DOM.nav) return;
-
-        let lastScroll = 0;
-        const scrollThreshold = 50;
-
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-
-            // Añadir/quitar clase de scroll
-            if (currentScroll > scrollThreshold) {
-                DOM.nav.classList.add('scrolled');
-            } else {
-                DOM.nav.classList.remove('scrolled');
-            }
-
-            lastScroll = currentScroll;
-        }, { passive: true });
-    }
-
-    // ========================================================================
-    // SCROLL ANIMATIONS (Intersection Observer)
-    // ========================================================================
-
-    /**
-     * Inicializa animaciones de aparición con Intersection Observer
-     * Más eficiente que escuchar eventos de scroll
-     */
-    function initScrollAnimations() {
-        // Verificar soporte para Intersection Observer
-        if (!('IntersectionObserver' in window)) {
-            // Fallback: mostrar todos los elementos
-            DOM.fadeElements.forEach(el => el.classList.add('visible'));
-            DOM.cards.forEach(el => el.classList.add('visible'));
-            return;
-        }
-
-        // Observer para elementos fade-in
-        const fadeObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    // Dejar de observar una vez visible
-                    fadeObserver.unobserve(entry.target);
-                }
-            });
-        }, {
+    // =========================================================================
+    // CONFIGURACIÓN GLOBAL
+    // =========================================================================
+    
+    const CONFIG = {
+        animation: {
+            duration: 800,
+            easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
-        });
+        },
+        carousel: {
+            autoplayDelay: 4000,
+            transitionDuration: 500
+        }
+    };
 
-        DOM.fadeElements.forEach(el => fadeObserver.observe(el));
+    // =========================================================================
+    // UTILIDADES
+    // =========================================================================
 
-        // Observer para cards y elementos de sección
-        const cardObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    // Añadir delay escalonado para efecto cascada
-                    setTimeout(() => {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }, index * 100);
-                    cardObserver.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -30px 0px'
-        });
-
-        // Preparar cards para animación
-        DOM.cards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            cardObserver.observe(card);
-        });
-    }
-
-    // ========================================================================
-    // SMOOTH SCROLL
-    // ========================================================================
-
-    /**
-     * Navegación suave hacia secciones (mejora la nativa de CSS)
-     */
-    function initSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-
-                // Ignorar enlaces vacíos o solo #
-                if (!href || href === '#') return;
-
-                const target = document.querySelector(href);
-                if (!target) return;
-
-                e.preventDefault();
-
-                // Calcular posición considerando el nav fijo
-                const navHeight = DOM.nav ? DOM.nav.offsetHeight : 0;
-                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
-
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-
-                // Actualizar URL sin scroll
-                history.pushState(null, null, href);
-            });
-        });
-    }
-
-    // ========================================================================
-    // ACTIVE NAV LINK HIGHLIGHTING
-    // ========================================================================
-
-    /**
-     * Resalta el enlace de navegación de la sección activa
-     */
-    function initActiveNavHighlight() {
-        if (!DOM.sections.length) return;
-
-        const navHeight = DOM.nav ? DOM.nav.offsetHeight : 0;
-
-        const sectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    if (!id) return;
-
-                    // Remover clase activa de todos los enlaces
-                    DOM.navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${id}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        }, {
-            threshold: 0.3,
-            rootMargin: `-${navHeight}px 0px -50% 0px`
-        });
-
-        DOM.sections.forEach(section => {
-            if (section.getAttribute('id')) {
-                sectionObserver.observe(section);
-            }
-        });
-    }
-
-    // ========================================================================
-    // PERFORMANCE OPTIMIZATIONS
-    // ========================================================================
-
-    /**
-     * Debounce function para optimizar eventos frecuentes
-     */
-    function debounce(func, wait = 10) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
+    const utils = {
+        debounce: (func, wait) => {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
                 clearTimeout(timeout);
-                func(...args);
+                timeout = setTimeout(later, wait);
             };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
+        },
 
-    /**
-     * Prefetch de enlaces internos en hover para mejor performance
-     */
-    function initLinkPrefetch() {
-        // Solo en navegadores que soporten prefetch
-        if (!('IntersectionObserver' in window)) return;
+        throttle: (func, limit) => {
+            let inThrottle;
+            return function(...args) {
+                if (!inThrottle) {
+                    func.apply(this, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            };
+        },
 
-        const prefetchedUrls = new Set();
+        prefersReducedMotion: () => {
+            return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        }
+    };
 
-        document.querySelectorAll('a[href^="http"]').forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                const href = link.getAttribute('href');
-                if (prefetchedUrls.has(href)) return;
+    // =========================================================================
+    // NAVEGACIÓN
+    // =========================================================================
 
-                const prefetchLink = document.createElement('link');
-                prefetchLink.rel = 'prefetch';
-                prefetchLink.href = href;
-                document.head.appendChild(prefetchLink);
-                prefetchedUrls.add(href);
-            }, { once: true });
-        });
-    }
+    const Navigation = {
+        nav: null,
+        toggle: null,
+        menu: null,
+        links: null,
 
-    // ========================================================================
-    // ACCESSIBILITY ENHANCEMENTS
-    // ========================================================================
+        init() {
+            this.nav = document.getElementById('nav');
+            this.toggle = document.getElementById('nav-toggle');
+            this.menu = document.getElementById('nav-menu');
+            this.links = this.menu?.querySelectorAll('.nav-link');
 
-    /**
-     * Mejoras de accesibilidad
-     */
-    function initAccessibility() {
-        // Detectar uso de teclado para mostrar focus rings
-        let isKeyboardUser = false;
+            if (!this.toggle || !this.menu) return;
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab') {
-                isKeyboardUser = true;
-                document.body.classList.add('keyboard-user');
+            this.bindEvents();
+            this.initScrollEffect();
+            this.initActiveState();
+        },
+
+        bindEvents() {
+            // Toggle menu
+            this.toggle.addEventListener('click', () => this.toggleMenu());
+
+            // Cerrar al hacer click en links
+            this.links.forEach(link => {
+                link.addEventListener('click', () => this.closeMenu());
+            });
+
+            // Cerrar al hacer click fuera
+            document.addEventListener('click', (e) => {
+                if (!this.menu.contains(e.target) && !this.toggle.contains(e.target)) {
+                    this.closeMenu();
+                }
+            });
+
+            // Cerrar con Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') this.closeMenu();
+            });
+        },
+
+        toggleMenu() {
+            const isOpen = this.toggle.classList.toggle('active');
+            this.menu.classList.toggle('active', isOpen);
+            this.toggle.setAttribute('aria-expanded', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        },
+
+        closeMenu() {
+            this.toggle.classList.remove('active');
+            this.menu.classList.remove('active');
+            this.toggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        },
+
+        initScrollEffect() {
+            if (!this.nav) return;
+
+            const handleScroll = utils.throttle(() => {
+                const scrolled = window.pageYOffset > 50;
+                this.nav.classList.toggle('nav--scrolled', scrolled);
+            }, 100);
+
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        },
+
+        initActiveState() {
+            const sections = document.querySelectorAll('section[id]');
+            if (!sections.length || !this.links) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        this.links.forEach(link => {
+                            link.classList.toggle('active', 
+                                link.getAttribute('href') === `#${id}`
+                            );
+                        });
+                    }
+                });
+            }, {
+                threshold: 0.3,
+                rootMargin: `-${this.nav?.offsetHeight || 80}px 0px -50% 0px`
+            });
+
+            sections.forEach(section => observer.observe(section));
+        }
+    };
+
+    // =========================================================================
+    // SERVICIOS - Acordeón con Carrusel
+    // =========================================================================
+
+    const Services = {
+        items: null,
+        carousel: null,
+        currentImages: [],
+        currentIndex: 0,
+        autoplayInterval: null,
+
+        init() {
+            this.items = document.querySelectorAll('.service-item');
+            this.carousel = document.getElementById('services-carousel');
+            
+            if (!this.items.length) return;
+
+            this.initAccordion();
+            this.initCarousel();
+            
+            // Activar primer item por defecto
+            this.activateItem(this.items[0]);
+        },
+
+        initAccordion() {
+            this.items.forEach(item => {
+                const header = item.querySelector('.service-item__header');
+                
+                header.addEventListener('click', () => this.activateItem(item));
+                
+                header.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.activateItem(item);
+                    }
+                });
+            });
+        },
+
+        activateItem(item) {
+            // Desactivar todos
+            this.items.forEach(i => {
+                i.classList.remove('active');
+                i.querySelector('.service-item__header').setAttribute('aria-expanded', 'false');
+            });
+
+            // Activar el seleccionado
+            item.classList.add('active');
+            item.querySelector('.service-item__header').setAttribute('aria-expanded', 'true');
+
+            // Actualizar imágenes del carrusel
+            const imagesData = item.getAttribute('data-images');
+            if (imagesData) {
+                this.currentImages = JSON.parse(imagesData);
+                this.rebuildCarousel();
             }
-        });
+        },
 
-        document.addEventListener('mousedown', () => {
-            isKeyboardUser = false;
-            document.body.classList.remove('keyboard-user');
-        });
+        initCarousel() {
+            if (!this.carousel) return;
 
-        // Skip to content link (si existe)
-        const skipLink = document.querySelector('.skip-link');
-        if (skipLink) {
-            skipLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.querySelector(skipLink.getAttribute('href'));
-                if (target) {
-                    target.setAttribute('tabindex', '-1');
-                    target.focus();
+            // Botones de navegación
+            const prevBtn = this.carousel.querySelector('.carousel__btn--prev');
+            const nextBtn = this.carousel.querySelector('.carousel__btn--next');
+
+            prevBtn?.addEventListener('click', () => this.prevSlide());
+            nextBtn?.addEventListener('click', () => this.nextSlide());
+
+            // Touch/Swipe
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            this.carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            this.carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                this.handleSwipe(touchStartX, touchEndX);
+            }, { passive: true });
+
+            // Pausar autoplay en hover
+            this.carousel.addEventListener('mouseenter', () => this.stopAutoplay());
+            this.carousel.addEventListener('mouseleave', () => this.startAutoplay());
+        },
+
+        rebuildCarousel() {
+            const track = document.getElementById('carousel-track');
+            const progress = document.getElementById('carousel-progress');
+            
+            if (!track || !this.currentImages.length) return;
+
+            // Limpiar
+            track.innerHTML = '';
+            progress.innerHTML = '';
+            this.currentIndex = 0;
+
+            // Crear slides
+            this.currentImages.forEach((src, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel__slide';
+                slide.innerHTML = `
+                    <img src="${src}" alt="Actividad ${index + 1}" class="carousel__image" loading="${index === 0 ? 'eager' : 'lazy'}">
+                `;
+                track.appendChild(slide);
+
+                // Crear dot
+                const dot = document.createElement('button');
+                dot.className = `carousel__progress-dot ${index === 0 ? 'active' : ''}`;
+                dot.setAttribute('aria-label', `Ver imagen ${index + 1}`);
+                dot.addEventListener('click', () => this.goToSlide(index));
+                progress.appendChild(dot);
+            });
+
+            this.updateCarouselPosition();
+            this.startAutoplay();
+        },
+
+        updateCarouselPosition() {
+            const track = document.getElementById('carousel-track');
+            const dots = document.querySelectorAll('.carousel__progress-dot');
+            
+            if (!track) return;
+
+            track.style.transform = `translateX(-${this.currentIndex * 100}%)`;
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === this.currentIndex);
+            });
+        },
+
+        nextSlide() {
+            this.currentIndex = (this.currentIndex + 1) % this.currentImages.length;
+            this.updateCarouselPosition();
+            this.resetAutoplay();
+        },
+
+        prevSlide() {
+            this.currentIndex = (this.currentIndex - 1 + this.currentImages.length) % this.currentImages.length;
+            this.updateCarouselPosition();
+            this.resetAutoplay();
+        },
+
+        goToSlide(index) {
+            this.currentIndex = index;
+            this.updateCarouselPosition();
+            this.resetAutoplay();
+        },
+
+        handleSwipe(startX, endX) {
+            const diff = startX - endX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) this.nextSlide();
+                else this.prevSlide();
+            }
+        },
+
+        startAutoplay() {
+            if (utils.prefersReducedMotion()) return;
+            this.stopAutoplay();
+            this.autoplayInterval = setInterval(() => this.nextSlide(), CONFIG.carousel.autoplayDelay);
+        },
+
+        stopAutoplay() {
+            if (this.autoplayInterval) {
+                clearInterval(this.autoplayInterval);
+                this.autoplayInterval = null;
+            }
+        },
+
+        resetAutoplay() {
+            this.stopAutoplay();
+            this.startAutoplay();
+        }
+    };
+
+    // =========================================================================
+    // TESTIMONIOS - Carrusel
+    // =========================================================================
+
+    const Testimonials = {
+        track: null,
+        items: null,
+        prevBtn: null,
+        nextBtn: null,
+        dots: null,
+        currentIndex: 0,
+        itemWidth: 0,
+        gap: 24,
+
+        init() {
+            this.track = document.getElementById('testimonials-track');
+            if (!this.track) return;
+
+            this.items = this.track.querySelectorAll('.testimonial-card-new');
+            this.prevBtn = document.querySelector('.testimonials-nav__btn--prev');
+            this.nextBtn = document.querySelector('.testimonials-nav__btn--next');
+            this.dots = document.querySelectorAll('.testimonials-nav__dot');
+
+            this.bindEvents();
+            this.calculateDimensions();
+            this.updatePosition();
+
+            window.addEventListener('resize', utils.debounce(() => {
+                this.calculateDimensions();
+                this.updatePosition();
+            }, 250));
+        },
+
+        bindEvents() {
+            this.prevBtn?.addEventListener('click', () => this.prev());
+            this.nextBtn?.addEventListener('click', () => this.next());
+
+            this.dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => this.goTo(index));
+            });
+
+            // Touch/Swipe
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            this.track.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            this.track.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                this.handleSwipe(touchStartX, touchEndX);
+            }, { passive: true });
+        },
+
+        calculateDimensions() {
+            if (!this.items.length) return;
+            
+            const containerWidth = this.track.parentElement.offsetWidth;
+            
+            // Calcular cuántos items mostrar según el viewport
+            if (window.innerWidth >= 1024) {
+                this.itemWidth = (containerWidth - this.gap * 2) / 3;
+            } else if (window.innerWidth >= 768) {
+                this.itemWidth = (containerWidth - this.gap) / 2;
+            } else {
+                this.itemWidth = containerWidth;
+            }
+        },
+
+        updatePosition() {
+            if (!this.track) return;
+            
+            const offset = this.currentIndex * (this.itemWidth + this.gap);
+            this.track.style.transform = `translateX(-${offset}px)`;
+
+            // Actualizar dots
+            this.dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === this.currentIndex);
+                dot.setAttribute('aria-selected', index === this.currentIndex);
+            });
+        },
+
+        next() {
+            const maxIndex = this.items.length - 1;
+            this.currentIndex = Math.min(this.currentIndex + 1, maxIndex);
+            this.updatePosition();
+        },
+
+        prev() {
+            this.currentIndex = Math.max(this.currentIndex - 1, 0);
+            this.updatePosition();
+        },
+
+        goTo(index) {
+            this.currentIndex = index;
+            this.updatePosition();
+        },
+
+        handleSwipe(startX, endX) {
+            const diff = startX - endX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) this.next();
+                else this.prev();
+            }
+        }
+    };
+
+    // =========================================================================
+    // ANIMACIONES DE SCROLL
+    // =========================================================================
+
+    const Animations = {
+        init() {
+            this.initFadeIn();
+            this.initSlideIn();
+        },
+
+        initFadeIn() {
+            const elements = document.querySelectorAll('.fade-in');
+            if (!elements.length || utils.prefersReducedMotion()) {
+                elements.forEach(el => el.classList.add('visible'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = entry.target.dataset.delay || 0;
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, delay * 100);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: CONFIG.animation.threshold,
+                rootMargin: CONFIG.animation.rootMargin
+            });
+
+            elements.forEach(el => observer.observe(el));
+        },
+
+        initSlideIn() {
+            const elements = document.querySelectorAll('.slide-in-left, .slide-in-right');
+            if (!elements.length || utils.prefersReducedMotion()) {
+                elements.forEach(el => el.classList.add('visible'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: CONFIG.animation.threshold,
+                rootMargin: CONFIG.animation.rootMargin
+            });
+
+            elements.forEach(el => observer.observe(el));
+        }
+    };
+
+    // =========================================================================
+    // SMOOTH SCROLL
+    // =========================================================================
+
+    const SmoothScroll = {
+        init() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', (e) => this.handleClick(e, anchor));
+            });
+        },
+
+        handleClick(e, anchor) {
+            const href = anchor.getAttribute('href');
+            if (!href || href === '#') return;
+
+            const target = document.querySelector(href);
+            if (!target) return;
+
+            e.preventDefault();
+
+            const navHeight = document.getElementById('nav')?.offsetHeight || 80;
+            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+
+            window.scrollTo({
+                top: targetPosition,
+                behavior: utils.prefersReducedMotion() ? 'auto' : 'smooth'
+            });
+
+            // Actualizar URL sin saltar
+            history.pushState(null, null, href);
+        }
+    };
+
+    // =========================================================================
+    // ACCESIBILIDAD
+    // =========================================================================
+
+    const Accessibility = {
+        init() {
+            this.initKeyboardNavigation();
+            this.initFocusManagement();
+        },
+
+        initKeyboardNavigation() {
+            // Detectar si el usuario usa teclado
+            let isKeyboard = false;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    isKeyboard = true;
+                    document.body.classList.add('keyboard-user');
+                }
+            });
+
+            document.addEventListener('mousedown', () => {
+                isKeyboard = false;
+                document.body.classList.remove('keyboard-user');
+            });
+        },
+
+        initFocusManagement() {
+            // Asegurar que los elementos interactivos sean focusables
+            document.querySelectorAll('[role="button"]').forEach(el => {
+                if (!el.hasAttribute('tabindex')) {
+                    el.setAttribute('tabindex', '0');
                 }
             });
         }
-    }
+    };
 
-    // ========================================================================
-    // EASTER EGG (Console message para devs)
-    // ========================================================================
+    // =========================================================================
+    // CONSOLA - Easter Egg
+    // =========================================================================
 
-    function initConsoleMessage() {
-        console.log('%c¡Hola! 👋', 'font-size: 24px; font-weight: bold; color: #0066FF;');
-        console.log('%cSi estás viendo esto, probablemente te interesa el código.', 'font-size: 14px; color: #6B7280;');
-        console.log('%c→ Este sitio está construido con HTML, CSS y JavaScript puro.', 'font-size: 14px; color: #6B7280;');
-        console.log('%c→ Sin frameworks, sin dependencias innecesarias.', 'font-size: 14px; color: #6B7280;');
-        console.log('%c→ Performance y simplicidad por sobre todo.', 'font-size: 14px; color: #6B7280;');
-        console.log('%c¿Conectamos? → linkedin.com/in/nicosanchez', 'font-size: 14px; color: #0066FF;');
-    }
+    const ConsoleMessage = {
+        init() {
+            const styles = [
+                'font-size: 24px',
+                'font-weight: bold',
+                'color: #0066FF',
+                'text-shadow: 2px 2px 4px rgba(0,102,255,0.3)'
+            ].join(';');
 
-    // ========================================================================
-    // INITIALIZATION
-    // ========================================================================
+            console.log('%c¡Hola! 👋', styles);
+            console.log('%c¿Curioso sobre el código? Este sitio está construido con:', 'font-size: 14px; color: #64748B;');
+            console.log('%c• HTML5 semántico y accesible', 'font-size: 13px; color: #475569;');
+            console.log('%c• CSS moderno con variables y glassmorphism', 'font-size: 13px; color: #475569;');
+            console.log('%c• JavaScript vanilla, modular y performante', 'font-size: 13px; color: #475569;');
+            console.log('%c• Cero frameworks, máxima velocidad ⚡', 'font-size: 13px; color: #475569;');
+            console.log('%c→ linkedin.com/in/nicolas-ignacio-sanchez-negrete', 'font-size: 14px; color: #0066FF; font-weight: 600;');
+        }
+    };
 
-    /**
-     * Inicializa todas las funcionalidades cuando el DOM está listo
-     */
+    // =========================================================================
+    // INICIALIZACIÓN
+    // =========================================================================
+
     function init() {
-        initMobileNav();
-        initNavScroll();
-        initScrollAnimations();
-        initSmoothScroll();
-        initActiveNavHighlight();
-        initAccessibility();
-        initLinkPrefetch();
-        initConsoleMessage();
+        Navigation.init();
+        Services.init();
+        Testimonials.init();
+        Animations.init();
+        SmoothScroll.init();
+        Accessibility.init();
+        ConsoleMessage.init();
 
-        // Marcar como cargado para transiciones CSS
+        // Marcar como cargado
         document.body.classList.add('loaded');
     }
 
-    // Ejecutar cuando el DOM esté listo
+    // Iniciar cuando el DOM esté listo
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
         init();
     }
 
-    // ========================================================================
-    // EXPORT (para uso modular si es necesario)
-    // ========================================================================
-
+    // Exponer API global para debugging
     window.NicoSanchez = {
-        init,
-        closeMenu,
-        debounce
+        version: '2025.1',
+        modules: {
+            Navigation,
+            Services,
+            Testimonials,
+            Animations
+        }
     };
 
 })();

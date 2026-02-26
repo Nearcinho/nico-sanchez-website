@@ -2068,36 +2068,39 @@ html {
 }
 
 
-/* Dedicatoria del libro */
-.book__dedication {
-    margin-top: var(--space-6);
-    padding: var(--space-6);
-    background: rgba(255, 149, 0, 0.1);
-    border-left: 4px solid #FF9500;
-    border-radius: var(--radius-lg);
+/* Sección Envisioner - Estilo sutil y aclaratorio */
+.book__envisioner {
+    margin-top: var(--space-10);
+    margin-bottom: var(--space-4);
+    padding: var(--space-6) var(--space-6);
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 2px solid #FF9500;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
-.book__dedication-text {
-    font-size: var(--text-base);
+.book__envisioner-text {
+    font-size: var(--text-sm);
+    color: var(--gray-400);
+    line-height: 1.6;
+    font-style: normal;
+}
+
+.book__envisioner-text a {
     color: var(--gray-300);
-    line-height: 1.7;
-    font-style: italic;
-}
-
-.book__dedication-text a {
-    color: #FF9500;
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: underline;
+    text-underline-offset: 2px;
     transition: color var(--duration-fast);
 }
 
-.book__dedication-text a:hover {
-    color: #FFB84D;
+.book__envisioner-text a:hover {
+    color: #FF9500;
 }
 
-.book__dedication-text strong {
+.book__envisioner-principle {
     color: #FF9500;
     font-weight: 600;
+    font-size: var(--text-base);
 }
 
 

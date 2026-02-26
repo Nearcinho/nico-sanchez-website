@@ -2066,3 +2066,36 @@ html {
     width: 24px;
     height: 24px;
 }
+
+
+/* Dedicatoria del libro */
+.book__dedication {
+    margin-top: var(--space-6);
+    padding: var(--space-6);
+    background: rgba(255, 149, 0, 0.1);
+    border-left: 4px solid #FF9500;
+    border-radius: var(--radius-lg);
+}
+
+.book__dedication-text {
+    font-size: var(--text-base);
+    color: var(--gray-300);
+    line-height: 1.7;
+    font-style: italic;
+}
+
+.book__dedication-text a {
+    color: #FF9500;
+    font-weight: 600;
+    text-decoration: underline;
+    transition: color var(--duration-fast);
+}
+
+.book__dedication-text a:hover {
+    color: #FFB84D;
+}
+
+.book__dedication-text strong {
+    color: #FF9500;
+    font-weight: 600;
+}

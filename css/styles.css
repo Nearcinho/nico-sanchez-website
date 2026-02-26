@@ -2150,7 +2150,7 @@ html {
 /* Badge Próximamente */
 .book__badge-soon {
     position: absolute;
-    top: -12px;
+    top: -40px;
     right: 20px;
     background: linear-gradient(135deg, #FF9500 0%, #FF6B35 100%);
     color: white;

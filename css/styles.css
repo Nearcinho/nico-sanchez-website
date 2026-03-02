@@ -2189,28 +2189,41 @@ html {
         padding: var(--space-3) 0;
     }
     
-    /* === HERO SECTION === */
+    /* === HERO SECTION - MOBILE REORDER === */
     .hero-new {
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Reordenar: Frase primero, luego foto, luego contenido */
+    .hero-new__content {
+        order: 1;
+        padding: var(--space-6) var(--space-5) var(--space-4);
         min-height: auto;
     }
     
     .hero-new__image {
-        height: 40vh;
-        min-height: 300px;
+        order: 2;
+        height: 45vh;
+        min-height: 350px;
+        position: relative;
     }
     
-    .hero-new__content {
-        padding: var(--space-6) var(--space-5);
-        min-height: auto;
+    /* Ajustar frase para que esté primera */
+    .hero-new__text {
+        display: flex;
+        flex-direction: column;
     }
     
     .hero-new__quote {
-        font-size: var(--text-lg);
+        font-size: var(--text-xl);
         position: static;
         transform: none;
-        margin: var(--space-4) 0 var(--space-6);
+        margin: 0 0 var(--space-6);
         padding-left: var(--space-4);
         max-width: 100%;
+        order: -1;
     }
     
     .hero-new__quote::before {
@@ -2220,6 +2233,7 @@ html {
     .hero-new__name {
         font-size: var(--text-3xl);
         margin-top: 0;
+        margin-bottom: var(--space-3);
     }
     
     .hero-new__role {
@@ -2230,7 +2244,7 @@ html {
     .hero-new__cta {
         flex-direction: column;
         gap: var(--space-3);
-        margin-bottom: var(--space-8);
+        margin-bottom: var(--space-4);
     }
     
     .hero-new__cta .btn {
@@ -2238,18 +2252,32 @@ html {
         justify-content: center;
     }
     
+    /* Logos de marcas - separados y ordenados */
     .hero-new__brands {
-        padding-top: var(--space-6);
+        order: 3;
+        padding: var(--space-6) var(--space-5);
+        margin-top: var(--space-2);
+        border-top: 1px solid var(--gray-200);
+    }
+    
+    .hero-new__brands-label {
+        font-size: var(--text-xs);
+        margin-bottom: var(--space-4);
+        text-align: center;
     }
     
     .hero-new__brands-logos {
-        gap: var(--space-4);
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-4) var(--space-3);
+        justify-items: center;
+        align-items: center;
     }
     
     .brand-logo-img {
-        height: 22px;
-        width: 70px;
+        height: 20px;
+        width: auto;
+        max-width: 80px;
     }
     
     .hero-new__scroll {

@@ -2189,100 +2189,118 @@ html {
         padding: var(--space-3) 0;
     }
     
-    /* === HERO SECTION - MOBILE REORDER === */
+    /* === HERO SECTION - MOBILE COMPLETELY REDESIGNED === */
     .hero-new {
         min-height: auto;
         display: flex;
         flex-direction: column;
+        padding-top: 0;
     }
     
-    /* Reordenar: Frase primero, luego foto, luego contenido */
-    .hero-new__content {
+    /* Estructura mobile: Frase -> Foto -> Contenido (nombre/botones) -> Logos */
+    
+    /* 1. FRASE PRIMERO - arriba de todo */
+    .hero-new__quote {
+        order: 0;
+        position: relative;
+        font-size: 1.25rem;
+        padding: var(--space-6) var(--space-5);
+        margin: 0;
+        max-width: 100%;
+        background: var(--color-bg);
+    }
+    
+    .hero-new__quote::before {
+        left: var(--space-5);
+    }
+    
+    /* 2. FOTO SEGUNDO */
+    .hero-new__image {
         order: 1;
-        padding: var(--space-6) var(--space-5) var(--space-4);
+        height: auto;
+        min-height: auto;
+        position: relative;
+        padding: 0 var(--space-5);
+        margin-bottom: var(--space-4);
+    }
+    
+    .hero-new__image img {
+        width: 100%;
+        max-height: 400px;
+        object-fit: contain;
+        object-position: center top;
+    }
+    
+    /* 3. CONTENIDO TERCERO (nombre, rol, botones) */
+    .hero-new__content {
+        order: 2;
+        padding: 0 var(--space-5) var(--space-4);
         min-height: auto;
     }
     
-    .hero-new__image {
-        order: 2;
-        height: 45vh;
-        min-height: 350px;
-        position: relative;
-    }
-    
-    /* Ajustar frase para que esté primera */
     .hero-new__text {
         display: flex;
         flex-direction: column;
     }
     
-    .hero-new__quote {
-        font-size: var(--text-xl);
-        position: static;
-        transform: none;
-        margin: 0 0 var(--space-6);
-        padding-left: var(--space-4);
-        max-width: 100%;
-        order: -1;
-    }
-    
-    .hero-new__quote::before {
-        left: -4px;
-    }
-    
     .hero-new__name {
-        font-size: var(--text-3xl);
-        margin-top: 0;
-        margin-bottom: var(--space-3);
+        font-size: 1.75rem;
+        margin: 0 0 var(--space-3);
+        line-height: 1.2;
     }
     
     .hero-new__role {
-        font-size: var(--text-sm);
-        margin-bottom: var(--space-6);
+        font-size: 0.875rem;
+        margin-bottom: var(--space-5);
+        color: var(--color-text-light);
     }
     
     .hero-new__cta {
         flex-direction: column;
         gap: var(--space-3);
-        margin-bottom: var(--space-4);
+        margin-bottom: var(--space-6);
     }
     
     .hero-new__cta .btn {
         width: 100%;
         justify-content: center;
+        padding: var(--space-3) var(--space-6);
     }
     
-    /* Logos de marcas - ordenados en grid */
+    /* 4. LOGOS DE MARCAS AL FINAL */
     .hero-new__brands {
         order: 3;
         padding: var(--space-6) var(--space-5);
-        margin-top: var(--space-2);
+        margin-top: 0;
         border-top: 1px solid var(--gray-200);
+        background: var(--color-bg);
     }
     
     .hero-new__brands-label {
-        font-size: var(--text-xs);
-        margin-bottom: var(--space-5);
+        font-size: 0.75rem;
+        margin-bottom: var(--space-4);
         text-align: center;
         color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
     }
     
     .hero-new__brands-logos {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-5) var(--space-4);
+        gap: var(--space-4) var(--space-3);
         justify-items: center;
         align-items: center;
-        max-width: 320px;
+        max-width: 300px;
         margin: 0 auto;
     }
     
     .brand-logo-img {
-        height: 24px;
+        height: 22px;
         width: auto;
-        max-width: 90px;
+        max-width: 85px;
         object-fit: contain;
-        opacity: 0.7;
+        opacity: 0.6;
     }
     
     .hero-new__scroll {

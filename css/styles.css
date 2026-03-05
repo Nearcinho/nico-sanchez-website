@@ -627,39 +627,60 @@ ul, ol {
     }
 }
 
-/* === TABLET LANDSCAPE HERO (768px – 1023px) === */
-@media (min-width: 768px) and (max-width: 1023px) {
-    /* Switch from center to flex-start to prevent content overflow */
+/* === TABLET / SHORT VIEWPORT HERO FIX ===
+   Targets any landscape tablet regardless of width:
+   viewport width ≥ 768px AND height ≤ 860px (covers tablets in landscape,
+   laptops with browser chrome open, etc.)
+   ========================================= */
+@media (min-width: 768px) and (max-height: 860px) {
+    /* Replace center+auto-margin (overflow root cause) with flex-start */
     .hero-new__content {
-        padding: var(--space-10) var(--space-8);
         justify-content: flex-start;
+        padding-top: var(--space-10);
+        padding-bottom: var(--space-8);
     }
 
-    /* Reduce name size so it fits in 2 lines instead of 3 */
+    /* Replace auto margin with fixed — prevents logos overlapping buttons */
+    .hero-new__brands {
+        margin-top: var(--space-6);
+    }
+
+    /* Tighter spacing so everything fits */
+    .hero-new__cta {
+        margin-bottom: var(--space-6);
+    }
+
+    .hero-new__role {
+        margin-bottom: var(--space-6);
+    }
+}
+
+/* === NARROW TABLET (768px – 1023px): reduce name font size === */
+@media (min-width: 768px) and (max-width: 1023px) {
     .hero-new__name {
         font-size: clamp(1.75rem, 3.5vw, 2.5rem);
         margin-top: 50px;
     }
 
-    /* Tighten role and cta spacing */
     .hero-new__role {
         font-size: var(--text-base);
-        margin-bottom: var(--space-6);
     }
 
-    .hero-new__cta {
-        margin-bottom: var(--space-6);
-    }
-
-    /* Replace auto margin (root cause of overlap) with fixed spacing */
-    .hero-new__brands {
-        margin-top: var(--space-6);
-    }
-
-    /* Slightly smaller logos to save vertical space */
     .brand-logo-img {
         height: 24px;
         width: 72px;
+    }
+}
+
+/* === WIDE TABLET LANDSCAPE (1024px+, short height): reduce name size too === */
+@media (min-width: 1024px) and (max-height: 860px) {
+    .hero-new__name {
+        font-size: clamp(2rem, 4vw, 3.25rem);
+        margin-top: 55px;
+    }
+
+    .hero-new__role {
+        font-size: var(--text-base);
     }
 }
 

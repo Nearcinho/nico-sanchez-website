@@ -2604,3 +2604,66 @@ html {
         font-size: var(--text-xs);
     }
 }
+
+/* =========================================
+   CHAT GREETING BUBBLE
+   ========================================= */
+#chat-greeting {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: #ffffff;
+    color: #1a1a2e;
+    font-family: var(--font-primary, 'Inter', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 10px 14px;
+    border-radius: 18px 18px 4px 18px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 9998;
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    max-width: 220px;
+    pointer-events: auto;
+}
+
+#chat-greeting::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    right: 14px;
+    border-width: 8px 8px 0 0;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.08));
+}
+
+#chat-greeting.chat-greeting--visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+#chat-greeting span {
+    flex: 1;
+    line-height: 1.4;
+}
+
+#chat-greeting-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+#chat-greeting-close:hover {
+    color: #1a1a2e;
+}

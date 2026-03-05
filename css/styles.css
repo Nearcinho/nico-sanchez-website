@@ -2309,12 +2309,12 @@ html {
     /* 4. LOGOS DE MARCAS AL FINAL */
     .hero-new__brands {
         order: 3;
-        padding: var(--space-6) var(--space-5);
-        margin-top: 0;
+        padding: var(--space-5) var(--space-5) var(--space-6);
+        margin-top: var(--space-6);
         border-top: 1px solid var(--gray-200);
         background: var(--color-bg);
     }
-    
+
     .hero-new__brands-label {
         font-size: 0.75rem;
         margin-bottom: var(--space-4);
@@ -2323,21 +2323,20 @@ html {
         text-transform: uppercase;
         letter-spacing: 0.1em;
     }
-    
+
     .hero-new__brands-logos {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-4) var(--space-3);
+        gap: var(--space-5) var(--space-4);
         justify-items: center;
         align-items: center;
-        max-width: 300px;
-        margin: 0 auto;
+        max-width: 100%;
     }
-    
+
     .brand-logo-img {
         height: 22px;
         width: auto;
-        max-width: 85px;
+        max-width: 90px;
         object-fit: contain;
         opacity: 0.6;
     }

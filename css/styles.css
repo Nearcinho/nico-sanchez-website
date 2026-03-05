@@ -627,6 +627,42 @@ ul, ol {
     }
 }
 
+/* === TABLET LANDSCAPE HERO (768px – 1023px) === */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Switch from center to flex-start to prevent content overflow */
+    .hero-new__content {
+        padding: var(--space-10) var(--space-8);
+        justify-content: flex-start;
+    }
+
+    /* Reduce name size so it fits in 2 lines instead of 3 */
+    .hero-new__name {
+        font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+        margin-top: 50px;
+    }
+
+    /* Tighten role and cta spacing */
+    .hero-new__role {
+        font-size: var(--text-base);
+        margin-bottom: var(--space-6);
+    }
+
+    .hero-new__cta {
+        margin-bottom: var(--space-6);
+    }
+
+    /* Replace auto margin (root cause of overlap) with fixed spacing */
+    .hero-new__brands {
+        margin-top: var(--space-6);
+    }
+
+    /* Slightly smaller logos to save vertical space */
+    .brand-logo-img {
+        height: 24px;
+        width: 72px;
+    }
+}
+
 .brand-logo-img--dark {
     filter: grayscale(100%) contrast(1.5) brightness(0.4);
 }

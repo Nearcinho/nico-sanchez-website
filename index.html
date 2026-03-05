@@ -631,7 +631,17 @@
                 hideTimer = setTimeout(hideBubble, 8000);
             }, 3000);
 
-            closeBtn.addEventListener('click', hideBubble);
+            closeBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                hideBubble();
+            });
+
+            bubble.addEventListener('click', function () {
+                hideBubble();
+                if (window.botpress && typeof window.botpress.open === 'function') {
+                    window.botpress.open();
+                }
+            });
         })();
     </script>
 </body>

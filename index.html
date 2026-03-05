@@ -605,13 +605,16 @@
             <button class="chat-bubble__close" aria-label="Cerrar mensajes">×</button>
         </div>
         <div class="chat-bubble chat-bubble--suggestion" id="chat-bubble-1">
-            <span>¿Quieres conocer mis servicios?</span>
+            <span>¿Trabajamos juntos?</span>
+            <button class="chat-bubble__close" aria-label="Cerrar mensaje">×</button>
         </div>
         <div class="chat-bubble chat-bubble--suggestion" id="chat-bubble-2">
             <span>¿Hablamos de tu próximo proyecto?</span>
+            <button class="chat-bubble__close" aria-label="Cerrar mensaje">×</button>
         </div>
         <div class="chat-bubble chat-bubble--suggestion" id="chat-bubble-3">
             <span>¿Te interesa mi libro de Influencer Marketing?</span>
+            <button class="chat-bubble__close" aria-label="Cerrar mensaje">×</button>
         </div>
     </div>
 
@@ -623,7 +626,6 @@
                 document.getElementById('chat-bubble-2'),
                 document.getElementById('chat-bubble-3')
             ];
-            var closeBtn = mainBubble.querySelector('.chat-bubble__close');
             var hideTimer;
 
             function openBot() {
@@ -660,9 +662,15 @@
             // Auto-hide after 12s
             hideTimer = setTimeout(hideAll, 12000);
 
-            closeBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                hideAll();
+            // Close buttons on all bubbles
+            [mainBubble].concat(suggestions).forEach(function (b) {
+                var btn = b.querySelector('.chat-bubble__close');
+                if (btn) {
+                    btn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        hideAll();
+                    });
+                }
             });
 
             mainBubble.addEventListener('click', function () {

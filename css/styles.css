@@ -2205,24 +2205,38 @@ html {
 
 
 /* ============================================================================
-   MOBILE OPTIMIZATIONS - max-width: 767px
+   MOBILE OPTIMIZATIONS - max-width: 900px
+   Covers phones up to 900px CSS width, including large phones like
+   Samsung S22 Ultra that may report a wider CSS viewport than expected.
    ============================================================================ */
 
-@media (max-width: 767px) {
-    
+@media (max-width: 900px) {
+
     /* === NAVIGATION === */
     .nav {
         height: 64px;
     }
-    
+
     .nav-logo__img {
         height: 36px;
     }
-    
+
+    /* Force hamburger menu — overrides the min-width: 768px desktop rules */
+    .nav-toggle {
+        display: flex !important;
+    }
+
     .nav-menu {
+        display: none !important;
+        flex-direction: column;
+        position: fixed;
         padding: calc(var(--nav-height) + var(--space-6)) var(--space-5) var(--space-6);
     }
-    
+
+    .nav-menu.active {
+        display: flex !important;
+    }
+
     .nav-link {
         font-size: var(--text-lg);
         padding: var(--space-3) 0;
@@ -2242,6 +2256,9 @@ html {
     .hero-new__quote {
         order: 0;
         position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
         font-size: 1.25rem;
         padding: var(--space-6) var(--space-5);
         margin: 0;

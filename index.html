@@ -598,49 +598,83 @@
     <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
     <script src="https://files.bpcontent.cloud/2026/03/05/09/20260305091332-8JSWLQBC.js" defer></script>
 
-    <!-- Chat bubble greeting -->
-    <div id="chat-greeting" aria-label="Mensaje del chat" role="status">
-        <span>Hola, ¿tienes alguna duda?</span>
-        <button id="chat-greeting-close" aria-label="Cerrar mensaje">×</button>
+    <!-- Chat bubbles -->
+    <div id="chat-bubbles-container" role="status" aria-label="Mensajes del chat">
+        <div class="chat-bubble" id="chat-bubble-main">
+            <span>Hola, ¿tienes alguna duda?</span>
+            <button class="chat-bubble__close" aria-label="Cerrar mensajes">×</button>
+        </div>
+        <div class="chat-bubble chat-bubble--suggestion" id="chat-bubble-1">
+            <span>¿Quieres conocer mis servicios?</span>
+        </div>
+        <div class="chat-bubble chat-bubble--suggestion" id="chat-bubble-2">
+            <span>¿Hablamos de tu próximo proyecto?</span>
+        </div>
+        <div class="chat-bubble chat-bubble--suggestion" id="chat-bubble-3">
+            <span>¿Te interesa mi libro de Influencer Marketing?</span>
+        </div>
     </div>
 
     <script>
         (function () {
-            var bubble = document.getElementById('chat-greeting');
-            var closeBtn = document.getElementById('chat-greeting-close');
+            var mainBubble = document.getElementById('chat-bubble-main');
+            var suggestions = [
+                document.getElementById('chat-bubble-1'),
+                document.getElementById('chat-bubble-2'),
+                document.getElementById('chat-bubble-3')
+            ];
+            var closeBtn = mainBubble.querySelector('.chat-bubble__close');
             var hideTimer;
 
-            function hideBubble() {
-                clearTimeout(hideTimer);
-                bubble.classList.remove('chat-greeting--visible');
-                bubble.addEventListener('transitionend', function handler() {
-                    bubble.style.display = 'none';
-                    bubble.removeEventListener('transitionend', handler);
-                });
-            }
-
-            // Show after 3 seconds
-            setTimeout(function () {
-                bubble.style.display = 'flex';
-                requestAnimationFrame(function () {
-                    requestAnimationFrame(function () {
-                        bubble.classList.add('chat-greeting--visible');
-                    });
-                });
-                // Auto-hide after 8 seconds
-                hideTimer = setTimeout(hideBubble, 8000);
-            }, 3000);
-
-            closeBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                hideBubble();
-            });
-
-            bubble.addEventListener('click', function () {
-                hideBubble();
+            function openBot() {
                 if (window.botpress && typeof window.botpress.open === 'function') {
                     window.botpress.open();
                 }
+            }
+
+            function hideAll() {
+                clearTimeout(hideTimer);
+                [mainBubble].concat(suggestions).forEach(function (b) {
+                    b.classList.remove('chat-bubble--visible');
+                    setTimeout(function () { b.style.display = 'none'; }, 300);
+                });
+            }
+
+            function showBubble(el, delay) {
+                setTimeout(function () {
+                    el.style.display = 'flex';
+                    requestAnimationFrame(function () {
+                        requestAnimationFrame(function () {
+                            el.classList.add('chat-bubble--visible');
+                        });
+                    });
+                }, delay);
+            }
+
+            // Main bubble after 3s, suggestions staggered every 600ms
+            showBubble(mainBubble, 3000);
+            showBubble(suggestions[0], 3600);
+            showBubble(suggestions[1], 4200);
+            showBubble(suggestions[2], 4800);
+
+            // Auto-hide after 12s
+            hideTimer = setTimeout(hideAll, 12000);
+
+            closeBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                hideAll();
+            });
+
+            mainBubble.addEventListener('click', function () {
+                hideAll();
+                openBot();
+            });
+
+            suggestions.forEach(function (s) {
+                s.addEventListener('click', function () {
+                    hideAll();
+                    openBot();
+                });
             });
         })();
     </script>
